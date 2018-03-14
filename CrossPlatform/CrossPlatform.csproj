@@ -44,6 +44,9 @@
     <Compile Include="..\SharedCode\Game1.cs">
       <Link>Game1.cs</Link>
     </Compile>
+    <Compile Include="..\SharedCode\startButton.cs">
+      <Link>startButton.cs</Link>
+    </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

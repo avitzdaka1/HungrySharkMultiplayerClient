@@ -1,3 +1,4 @@
+using CrossPlatform;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
@@ -14,6 +15,17 @@ namespace AndroidVersion
         Texture2D mainScreen;
         int screenWidth;
         int screenHeight;
+
+        enum GameState
+        {
+            MainMenu,
+            SinglePlayer,
+            MultiPlayer
+        }
+
+        GameState CurrentGameState = GameState.MainMenu;
+
+        startButton btnPlay;
 
         public MyCrossPlatformGame()
         {
@@ -35,10 +47,11 @@ namespace AndroidVersion
         protected override void Initialize()
         {
             // TODO: Add your initialization logic here
-            
+            IsMouseVisible = true;
             base.Initialize();
             screenWidth = GraphicsDevice.Viewport.Width;
             screenHeight = GraphicsDevice.Viewport.Height;
+           
         }
 
         /// <summary>
@@ -50,7 +63,8 @@ namespace AndroidVersion
             // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
             mainScreen = Content.Load<Texture2D>("MainMenu");
-
+            btnPlay = new startButton(Content.Load<Texture2D>("play"),graphics.GraphicsDevice);
+            btnPlay.setPosition(new Vector2(200, 200));
             // TODO: use this.Content to load your game content here
         }
 
@@ -72,15 +86,25 @@ namespace AndroidVersion
         {
              if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed)
                 Exit();
-
+            MouseState mouse = Mouse.GetState();
             // TODO: Add your update logic here
-
+            switch(CurrentGameState)
+            {
+                case GameState.MainMenu:
+                    if (btnPlay.isClicked == true) CurrentGameState = GameState.SinglePlayer;
 #if WINDOWS
-    // sasadadadadsas
+                    btnPlay.Update(mouse);
 #elif ANDROID
-            //sadafasasasas
+                     btnPlay.Update();
 #endif
+                    break;
+                case GameState.SinglePlayer:
 
+                    break;
+                case GameState.MultiPlayer:
+
+                    break;
+            }
 
 
             base.Update(gameTime);
@@ -90,13 +114,32 @@ namespace AndroidVersion
         /// This is called when the game should draw itself.
         /// </summary>
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
+
+
+
         protected override void Draw(GameTime gameTime)
         {
             GraphicsDevice.Clear(Color.CornflowerBlue);
 
             // TODO: Add your drawing code here
             spriteBatch.Begin();
-            spriteBatch.Draw(mainScreen, new Rectangle(0,0,screenWidth,screenHeight), Color.White);
+
+            switch (CurrentGameState)
+            {
+                case GameState.MainMenu:
+                    spriteBatch.Draw(mainScreen, new Rectangle(0, 0, screenWidth, screenHeight), Color.White);
+                    btnPlay.Draw(spriteBatch);
+                    break;
+                case GameState.SinglePlayer:
+
+                    break;
+                case GameState.MultiPlayer:
+
+                    break;
+            }
+
+
+            
                 base.Draw(gameTime);
             spriteBatch.End(); 
         }
