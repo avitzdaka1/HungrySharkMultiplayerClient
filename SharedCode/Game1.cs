@@ -51,7 +51,8 @@ namespace AndroidVersion
             base.Initialize();
             screenWidth = GraphicsDevice.Viewport.Width;
             screenHeight = GraphicsDevice.Viewport.Height;
-           
+            btnPlay.setPosition(new Vector2(screenWidth / 4+screenWidth/10, screenHeight * 1 / 4));
+
         }
 
         /// <summary>
@@ -64,7 +65,6 @@ namespace AndroidVersion
             spriteBatch = new SpriteBatch(GraphicsDevice);
             mainScreen = Content.Load<Texture2D>("MainMenu");
             btnPlay = new startButton(Content.Load<Texture2D>("play"),graphics.GraphicsDevice);
-            btnPlay.setPosition(new Vector2(200, 200));
             // TODO: use this.Content to load your game content here
         }
 

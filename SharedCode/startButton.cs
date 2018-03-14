@@ -74,7 +74,7 @@ namespace CrossPlatform
 
                 {
                     rectangle = new Rectangle((int)position.X, (int)position.Y, (int)size.X, (int)size.Y);
-                    Rectangle touchPos = new Rectangle((int)tl.Position.X - 1, (int)tl.Position.Y - 1, (int)tl.Position.X + 1, (int)tl.Position.Y + 1);
+                    Rectangle touchPos = new Rectangle((int)tl.Position.X, (int)tl.Position.Y, (int)tl.Position.X, (int)tl.Position.Y);
 
 
                     if (touchPos.Intersects(rectangle))
