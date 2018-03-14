@@ -61,8 +61,17 @@
     <Compile Include="..\SharedCode\Game1.cs">
       <Link>Game1.cs</Link>
     </Compile>
-    <Compile Include="..\SharedCode\startButton.cs">
-      <Link>startButton.cs</Link>
+    <Compile Include="..\SharedCode\Models\Player.cs">
+      <Link>models\Player.cs</Link>
+    </Compile>
+    <Compile Include="..\SharedCode\Models\startButton.cs">
+      <Link>models\startButton.cs</Link>
+    </Compile>
+    <Compile Include="..\SharedCode\Scenes\Scene.cs">
+      <Link>scenes\Scene.cs</Link>
+    </Compile>
+    <Compile Include="..\SharedCode\Scenes\Scene1.cs">
+      <Link>scenes\Scene1.cs</Link>
     </Compile>
     <Compile Include="Activity1.cs" />
     <Compile Include="Resources\Resource.Designer.cs" />

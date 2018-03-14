@@ -12,18 +12,19 @@ namespace AndroidVersion
     {
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
-        Texture2D mainScreen;
+        Scene1 scene1;
+        //Texture2D mainScreen;
         int screenWidth;
         int screenHeight;
 
         enum GameState
         {
             MainMenu,
-            SinglePlayer,
+           SinglePlayer,
             MultiPlayer
         }
 
-        GameState CurrentGameState = GameState.MainMenu;
+       GameState CurrentGameState = GameState.MainMenu;
 
         startButton btnPlay;
 
@@ -32,10 +33,7 @@ namespace AndroidVersion
             graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
 
-           // graphics.IsFullScreen = true;
-          //  graphics.PreferredBackBufferWidth = 800;
-           // graphics.PreferredBackBufferHeight = 480;
-          //  graphics.SupportedOrientations = DisplayOrientation.LandscapeLeft | DisplayOrientation.LandscapeRight;
+         
         }
 
         /// <summary>
@@ -63,8 +61,12 @@ namespace AndroidVersion
         {
             // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
-            mainScreen = Content.Load<Texture2D>("MainMenu");
+            Services.AddService(typeof(SpriteBatch), spriteBatch);
+           // mainScreen = Content.Load<Texture2D>("MainMenu");
             btnPlay = new startButton(Content.Load<Texture2D>("play"),graphics.GraphicsDevice);
+            scene1 = new Scene1(this);
+            scene1.Show();
+            Components.Add(scene1);
             // TODO: use this.Content to load your game content here
         }
 
@@ -86,12 +88,25 @@ namespace AndroidVersion
         {
              if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed)
                 Exit();
+
+
+            if (scene1.isEnded())
+            {
+                scene1.Hide();
+                
+            }
+
+
             MouseState mouse = Mouse.GetState();
             // TODO: Add your update logic here
             switch(CurrentGameState)
             {
                 case GameState.MainMenu:
-                    if (btnPlay.isClicked == true) CurrentGameState = GameState.SinglePlayer;
+                    if (btnPlay.isClicked == true)
+                    {
+                        CurrentGameState = GameState.SinglePlayer;
+                        
+                    }
 #if WINDOWS
                     btnPlay.Update(mouse);
 #elif ANDROID
@@ -127,7 +142,7 @@ namespace AndroidVersion
             switch (CurrentGameState)
             {
                 case GameState.MainMenu:
-                    spriteBatch.Draw(mainScreen, new Rectangle(0, 0, screenWidth, screenHeight), Color.White);
+                //    spriteBatch.Draw(mainScreen, new Rectangle(0, 0, screenWidth, screenHeight), Color.White);
                     btnPlay.Draw(spriteBatch);
                     break;
                 case GameState.SinglePlayer:
