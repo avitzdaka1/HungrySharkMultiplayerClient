@@ -18,12 +18,16 @@ namespace AndroidVersion
         private Texture2D playerTex;
         private Vector2 position;
         private TouchCollection currentTouchState;
+        private float joystickHeight;
+        private float joystickWidth;
 
         public Player(Game game) : base(game)
         {
             this.game = game;
             playerTex = game.Content.Load<Texture2D>("shark");
             spriteBatch = (SpriteBatch)game.Services.GetService(typeof(SpriteBatch));
+            joystickHeight = game.GraphicsDevice.Viewport.Height / 3;
+            joystickWidth = game.GraphicsDevice.Viewport.Width / 4;
         }
 
         protected override void Dispose(bool disposing)
@@ -59,10 +63,12 @@ namespace AndroidVersion
             
            foreach(TouchLocation tl in currentTouchState)
             {
-                if (tl.Position.X <= game.GraphicsDevice.Viewport.Width / 3 && tl.Position.Y >= game.GraphicsDevice.Viewport.Height / 2)
+                if (tl.Position.X <= game.GraphicsDevice.Viewport.Width / 4.5 && tl.Position.Y >= game.GraphicsDevice.Viewport.Height / 3)
                 {
-                    float x = 10 * (tl.Position.X*3 - game.GraphicsDevice.Viewport.Width/2)/ game.GraphicsDevice.Viewport.Width;
-                    float y = 10 * (tl.Position.Y-game.GraphicsDevice.Viewport.Height/4 - game.GraphicsDevice.Viewport.Height/2)/ game.GraphicsDevice.Viewport.Height;
+                    float x = 10 * (tl.Position.X*(float)4.5 - game.GraphicsDevice.Viewport.Width/2)/ game.GraphicsDevice.Viewport.Width;
+                 
+                    float y = 10* (tl.Position.Y - joystickHeight - game.GraphicsDevice.Viewport.Height/2) / game.GraphicsDevice.Viewport.Height;
+
 
                     position.X += x;
                     position.Y += y;
