@@ -13,20 +13,9 @@ namespace AndroidVersion
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
         Scene1 scene1;
-        //Texture2D mainScreen;
-        int screenWidth;
-        int screenHeight;
-
-        enum GameState
-        {
-            MainMenu,
-           SinglePlayer,
-            MultiPlayer
-        }
-
-       GameState CurrentGameState = GameState.MainMenu;
-
-        startButton btnPlay;
+        Menu mainMenu;
+        
+        
 
         public MyCrossPlatformGame()
         {
@@ -47,9 +36,8 @@ namespace AndroidVersion
             // TODO: Add your initialization logic here
             IsMouseVisible = true;
             base.Initialize();
-            screenWidth = GraphicsDevice.Viewport.Width;
-            screenHeight = GraphicsDevice.Viewport.Height;
-            btnPlay.setPosition(new Vector2(screenWidth / 4+screenWidth/10, screenHeight * 1 / 4));
+            
+            
 
         }
 
@@ -62,11 +50,14 @@ namespace AndroidVersion
             // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
             Services.AddService(typeof(SpriteBatch), spriteBatch);
-           // mainScreen = Content.Load<Texture2D>("MainMenu");
-            btnPlay = new startButton(Content.Load<Texture2D>("play"),graphics.GraphicsDevice);
+          
             scene1 = new Scene1(this);
-            scene1.Show();
+            mainMenu = new Menu(this);
+            
             Components.Add(scene1);
+            Components.Add(mainMenu);
+
+            mainMenu.Show();
             // TODO: use this.Content to load your game content here
         }
 
@@ -90,36 +81,17 @@ namespace AndroidVersion
                 Exit();
 
 
-            if (scene1.isEnded())
+            if (mainMenu.isEnded())
             {
-                scene1.Hide();
-                
+
+                mainMenu.Hide();
+                scene1.Show();
             }
 
 
-            MouseState mouse = Mouse.GetState();
+           
             // TODO: Add your update logic here
-            switch(CurrentGameState)
-            {
-                case GameState.MainMenu:
-                    if (btnPlay.isClicked == true)
-                    {
-                        CurrentGameState = GameState.SinglePlayer;
-                        
-                    }
-#if WINDOWS
-                    btnPlay.Update(mouse);
-#elif ANDROID
-                     btnPlay.Update();
-#endif
-                    break;
-                case GameState.SinglePlayer:
-
-                    break;
-                case GameState.MultiPlayer:
-
-                    break;
-            }
+         
 
 
             base.Update(gameTime);
@@ -139,20 +111,7 @@ namespace AndroidVersion
             // TODO: Add your drawing code here
             spriteBatch.Begin();
 
-            switch (CurrentGameState)
-            {
-                case GameState.MainMenu:
-                //    spriteBatch.Draw(mainScreen, new Rectangle(0, 0, screenWidth, screenHeight), Color.White);
-                    btnPlay.Draw(spriteBatch);
-                    break;
-                case GameState.SinglePlayer:
-
-                    break;
-                case GameState.MultiPlayer:
-
-                    break;
-            }
-
+            
 
             
                 base.Draw(gameTime);

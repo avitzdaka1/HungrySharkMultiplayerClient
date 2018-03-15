@@ -11,8 +11,10 @@ using Microsoft.Xna.Framework.Input.Touch;
 
 namespace CrossPlatform
 {
-    class startButton
+    public class startButton : DrawableGameComponent
     {
+        private Game game;
+        SpriteBatch spriteBatch;
         private Texture2D texture;
         private Vector2 position;
         private Rectangle rectangle;
@@ -25,14 +27,22 @@ namespace CrossPlatform
         bool down;
         public bool isClicked;
 
-        public startButton(Texture2D texture, GraphicsDevice graphics)
+        public startButton(Game game) : base(game)
         {
-            this.texture = texture;
+            this.game = game;
+            spriteBatch = (SpriteBatch)game.Services.GetService(typeof(SpriteBatch));
+            texture = game.Content.Load<Texture2D>("play");
 
-            size = new Vector2(graphics.Viewport.Width / 4, graphics.Viewport.Height / 8);
+            size = new Vector2(game.GraphicsDevice.Viewport.Width / 4, game.GraphicsDevice.Viewport.Height / 8);
 
 
 
+        }
+
+        protected override void Dispose(bool disposing)
+        {
+            texture.Dispose();
+            base.Dispose(disposing);
         }
 
         public Vector2 getSize()
@@ -101,7 +111,7 @@ namespace CrossPlatform
             this.position = position;
         }
 
-        public void Draw(SpriteBatch spriteBatch)
+        public override void Draw(GameTime gameTime)
         {
             spriteBatch.Draw(texture, rectangle, color);
         }

@@ -37,7 +37,7 @@ public class Scene1 : Scene
         public override void Draw(GameTime gameTime)
         {
 #if ANDROID
-            spriteBatch.Draw(joystick, new Rectangle(0, game.GraphicsDevice.Viewport.Height*2 / 3, (int)(game.GraphicsDevice.Viewport.Width / 4.5), GraphicsDevice.Viewport.Height/3), Color.White);
+            spriteBatch.Draw(joystick, new Rectangle(-40, game.GraphicsDevice.Viewport.Height*2 / 3 - 30 , (int)(game.GraphicsDevice.Viewport.Width / 4.5+80), GraphicsDevice.Viewport.Height/3 +60), Color.White);
 #endif
             game.GraphicsDevice.Clear(Color.CornflowerBlue);
             base.Draw(gameTime);

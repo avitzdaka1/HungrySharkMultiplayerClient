@@ -20,6 +20,8 @@ namespace AndroidVersion
         private TouchCollection currentTouchState;
         private float joystickHeight;
         private float joystickWidth;
+        enum Direction { Right, Left };
+        private Direction myDirection;
 
         public Player(Game game) : base(game)
         {
@@ -28,6 +30,7 @@ namespace AndroidVersion
             spriteBatch = (SpriteBatch)game.Services.GetService(typeof(SpriteBatch));
             joystickHeight = game.GraphicsDevice.Viewport.Height / 3;
             joystickWidth = game.GraphicsDevice.Viewport.Width / 4;
+            myDirection = Direction.Right;
         }
 
         protected override void Dispose(bool disposing)
@@ -38,7 +41,7 @@ namespace AndroidVersion
 
         public override void Update(GameTime gameTime)
         {
-
+            double startX = position.X;
 #if WINDOWS
             if(Keyboard.GetState().IsKeyDown(Keys.Up))
                 {
@@ -57,17 +60,17 @@ namespace AndroidVersion
                 position.X -= 3;
             }
 
-            base.Update(gameTime);
+
 #elif ANDROID
             currentTouchState = TouchPanel.GetState();
             
            foreach(TouchLocation tl in currentTouchState)
             {
-                if (tl.Position.X <= game.GraphicsDevice.Viewport.Width / 4.5 && tl.Position.Y >= game.GraphicsDevice.Viewport.Height / 3)
+                if (tl.Position.X <= game.GraphicsDevice.Viewport.Width / 4.5 && tl.Position.Y >= game.GraphicsDevice.Viewport.Height*2 / 3)
                 {
                     float x = 10 * (tl.Position.X*(float)4.5 - game.GraphicsDevice.Viewport.Width/2)/ game.GraphicsDevice.Viewport.Width;
                  
-                    float y = 10* (tl.Position.Y - joystickHeight - game.GraphicsDevice.Viewport.Height/2) / game.GraphicsDevice.Viewport.Height;
+                    float y = 15* (tl.Position.Y - joystickHeight - game.GraphicsDevice.Viewport.Height/2) / game.GraphicsDevice.Viewport.Height;
 
 
                     position.X += x;
@@ -76,11 +79,19 @@ namespace AndroidVersion
             }
 
 #endif
+            if (startX - position.X < 0)
+                myDirection = Direction.Right;
+            else
+                myDirection = Direction.Left;
+            base.Update(gameTime);
         }
 
         public override void Draw(GameTime gameTime)
         {
-            spriteBatch.Draw(playerTex, position, Color.Red);
+            if (myDirection == Direction.Right)
+                spriteBatch.Draw(playerTex, position, Color.Red);
+            else
+                spriteBatch.Draw(playerTex, position, null, Color.Red, 0, Vector2.Zero, 1, SpriteEffects.FlipHorizontally, 0);
             base.Draw(gameTime);
         }
 

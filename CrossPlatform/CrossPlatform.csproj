@@ -50,6 +50,9 @@
     <Compile Include="..\SharedCode\Models\startButton.cs">
       <Link>models\startButton.cs</Link>
     </Compile>
+    <Compile Include="..\SharedCode\Scenes\Menu.cs">
+      <Link>scenes\Menu.cs</Link>
+    </Compile>
     <Compile Include="..\SharedCode\Scenes\Scene.cs">
       <Link>scenes\Scene.cs</Link>
     </Compile>
