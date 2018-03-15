@@ -16,6 +16,7 @@ public class Scene1 : Scene
         private int mapHeight = 3000;
         private int mapWidth = 5000;
         private Camera2d camera;
+        private Rectangle joystickPos;
 
         public Scene1(Game game) : base(game)
         {
@@ -27,6 +28,7 @@ public class Scene1 : Scene
             joystick = game.Content.Load<Texture2D>("joystick");
             map = game.Content.Load<Texture2D>("seaTexture");
             camera = new Camera2d(new Viewport(new Rectangle(0, 0, 100, 100)), mapWidth, mapHeight, 1);
+            joystickPos = new Rectangle(-40, game.GraphicsDevice.Viewport.Height * 2 / 3 - 30, (int)(game.GraphicsDevice.Viewport.Width / 4.5 + 80), GraphicsDevice.Viewport.Height / 3 + 60);
             SceneComponents.Add(player);
             EndScene = false;
         }
@@ -38,6 +40,10 @@ public class Scene1 : Scene
         }
         public override void Update(GameTime gameTime)
         {
+
+            joystickPos.X = (int)camera.Pos.X - 100;
+            joystickPos.Y = (int)camera.Pos.Y + game.GraphicsDevice.Viewport.Height - joystick.Height - 100;
+
             camera.Pos = new Vector2(player.Position.X + player.PlayerTex.Width - game.GraphicsDevice.Viewport.Width/2  ,   player.Position.Y - game.GraphicsDevice.Viewport.Height/2 + player.PlayerTex.Height*3);
             base.Update(gameTime);
         }
@@ -45,10 +51,8 @@ public class Scene1 : Scene
         private void _initialize() { }
         public override void Draw(GameTime gameTime)
         {
-#if ANDROID
-            spriteBatch.Draw(joystick, new Rectangle(-40, game.GraphicsDevice.Viewport.Height*2 / 3 - 30 , (int)(game.GraphicsDevice.Viewport.Width / 4.5+80), GraphicsDevice.Viewport.Height/3 +60), Color.White);
-#endif
-            //  spriteBatch.Draw(map, new Rectangle(0,0, 2000, 2000), Color.White);
+
+            
 
             spriteBatch.End();
             spriteBatch.Begin(SpriteSortMode.BackToFront,
@@ -57,6 +61,9 @@ public class Scene1 : Scene
             spriteBatch.Draw(map,
    new Rectangle(0, 0, mapWidth, mapHeight),
    null, Color.White, 0f, Vector2.Zero, SpriteEffects.None, 1);
+#if ANDROID
+            spriteBatch.Draw(joystick, joystickPos , Color.White);
+#endif
 
 
             game.GraphicsDevice.Clear(Color.CornflowerBlue);
