@@ -56,19 +56,16 @@ namespace AndroidVersion
             base.Update(gameTime);
 #elif ANDROID
             currentTouchState = TouchPanel.GetState();
-
-            while (TouchPanel.IsGestureAvailable)
+            
+           foreach(TouchLocation tl in currentTouchState)
             {
-                var gesture = TouchPanel.ReadGesture();
-                switch (gesture.GestureType)
+                if (tl.Position.X <= game.GraphicsDevice.Viewport.Width / 3 && tl.Position.Y >= game.GraphicsDevice.Viewport.Height / 2)
                 {
-                    case GestureType.HorizontalDrag:
-                        position.X += 3;
-                    break;
+                    float x = 10 * (tl.Position.X*3 - game.GraphicsDevice.Viewport.Width/2)/ game.GraphicsDevice.Viewport.Width;
+                    float y = 10 * (tl.Position.Y-game.GraphicsDevice.Viewport.Height/4 - game.GraphicsDevice.Viewport.Height/2)/ game.GraphicsDevice.Viewport.Height;
 
-                    case GestureType.VerticalDrag:
-                        position.Y -= 3;
-                        break;
+                    position.X += x;
+                    position.Y += y;
                 }
             }
 
