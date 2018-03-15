@@ -61,7 +61,7 @@ namespace AndroidVersion
         {
           
                 
-                game.GraphicsDevice.Clear(Color.CornflowerBlue);
+              //  game.GraphicsDevice.Clear(Color.CornflowerBlue);
                 base.Draw(gameTime);
             
             

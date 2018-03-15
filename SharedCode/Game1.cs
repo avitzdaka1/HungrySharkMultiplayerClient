@@ -14,8 +14,8 @@ namespace AndroidVersion
         SpriteBatch spriteBatch;
         Scene1 scene1;
         Menu mainMenu;
-        
-        
+
+
 
         public MyCrossPlatformGame()
         {
@@ -36,8 +36,9 @@ namespace AndroidVersion
             // TODO: Add your initialization logic here
             IsMouseVisible = true;
             base.Initialize();
-            
-            
+
+           
+
 
         }
 
@@ -109,12 +110,14 @@ namespace AndroidVersion
             GraphicsDevice.Clear(Color.CornflowerBlue);
 
             // TODO: Add your drawing code here
-            spriteBatch.Begin();
+             spriteBatch.Begin();
+           // spriteBatch.Begin(SpriteSortMode.BackToFront,
+               //     null, null, null, null, null,
+                //     camera.GetTransformation());
 
             
 
-            
-                base.Draw(gameTime);
+            base.Draw(gameTime);
             spriteBatch.End(); 
         }
     }

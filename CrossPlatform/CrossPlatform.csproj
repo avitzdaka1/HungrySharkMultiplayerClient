@@ -41,6 +41,9 @@
     <ApplicationManifest>app.manifest</ApplicationManifest>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="..\SharedCode\Camera\Camera.cs">
+      <Link>camera\Camera.cs</Link>
+    </Compile>
     <Compile Include="..\SharedCode\Game1.cs">
       <Link>Game1.cs</Link>
     </Compile>

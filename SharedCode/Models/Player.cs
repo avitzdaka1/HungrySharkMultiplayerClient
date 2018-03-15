@@ -23,6 +23,9 @@ namespace AndroidVersion
         enum Direction { Right, Left };
         private Direction myDirection;
 
+        public Vector2 Position { get => position; set => position = value; }
+        public Texture2D PlayerTex { get => playerTex; set => playerTex = value; }
+
         public Player(Game game) : base(game)
         {
             this.game = game;
@@ -30,6 +33,7 @@ namespace AndroidVersion
             spriteBatch = (SpriteBatch)game.Services.GetService(typeof(SpriteBatch));
             joystickHeight = game.GraphicsDevice.Viewport.Height / 3;
             joystickWidth = game.GraphicsDevice.Viewport.Width / 4;
+            position = new Vector2(game.GraphicsDevice.Viewport.Width / 2 - playerTex.Width/2 , game.GraphicsDevice.Viewport.Height / 2 - playerTex.Height / 2);
             myDirection = Direction.Right;
         }
 
@@ -79,10 +83,13 @@ namespace AndroidVersion
             }
 
 #endif
-            if (startX - position.X < 0)
-                myDirection = Direction.Right;
-            else
-                myDirection = Direction.Left;
+            if (startX != position.X)
+            {
+                if (startX - position.X < 0)
+                    myDirection = Direction.Right;
+                else
+                    myDirection = Direction.Left;
+            }
             base.Update(gameTime);
         }
 
