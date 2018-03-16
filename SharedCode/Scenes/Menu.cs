@@ -10,7 +10,7 @@ namespace AndroidVersion
 {
     public class Menu : Scene
     {
-        enum keys { A, B, C, D, E, F, G };
+        enum keys { A, B, C, D, E, F, G , H, I, J, K , L, M , N , O , P , Q, R , S, T , U, V, W, X, Y, Z };
 
         private SpriteBatch spriteBatch;
         private Game game;
@@ -23,7 +23,8 @@ namespace AndroidVersion
         private StringBuilder name;
         private SpriteFont font;
         private Keys last_Key;
-        private keys currentKey;
+        private keys? currentKey;
+        GestureSample gesture;
 
         public Menu(Game game) : base(game)
         {
@@ -42,9 +43,9 @@ namespace AndroidVersion
             font = game.Content.Load<SpriteFont>("MyFont");
             last_Key = 0;
             currentKey = 0;
-            
-
-
+            gesture = new GestureSample();
+            TouchPanel.EnableMouseGestures = true;
+            TouchPanel.EnabledGestures = GestureType.HorizontalDrag | GestureType.DragComplete | GestureType.DoubleTap | GestureType.Hold;
 
 
 
@@ -71,26 +72,43 @@ namespace AndroidVersion
                 if(inputMode)
                 {
 #if ANDROID
-                var gesture = default(GestureSample);
-                TouchPanel.EnableMouseGestures = true;
+                if(currentKey == null)
+                    currentKey = 0;
                 while (TouchPanel.IsGestureAvailable)
                 {
                     gesture = TouchPanel.ReadGesture();
 
-                    if (gesture.GestureType == GestureType.DragComplete)
+                    if (gesture.GestureType == GestureType.HorizontalDrag)
                     {
+                        
                         if (gesture.Delta.Y < 0 || gesture.Delta.X < 0)
                             currentKey++;
                         if (gesture.Delta.Y > 0 || gesture.Delta.X > 0)
                             currentKey--;
                     }
+                    
+                    if (gesture.GestureType == GestureType.DoubleTap)
+                    {
+                        name.Append(currentKey.ToString());
+                          currentKey = null;
+                    }
+                   
+                    if (gesture.GestureType == GestureType.Hold)
+                    {
+                        name.Append(currentKey.ToString());
+                     //   currentKey = null;
+                        inputMode = false;
+                        Scene1.StartNetwork(name.ToString());
+                        EndScene = true;
+                    }
+
                 }
 #endif
 
 
 
 
-
+               
 
 
 
@@ -102,7 +120,11 @@ namespace AndroidVersion
                     if(last_Key != pressed_key[0])
                     {
                         if (pressed_key[0] == Keys.Enter)
+                        {
                             inputMode = false;
+                            Scene1.StartNetwork(name.ToString());
+                            EndScene = true;
+                        }
                         else
                         {
                             name.Append(pressed_key[0]);
@@ -142,7 +164,14 @@ namespace AndroidVersion
 
                 inputName.Draw(spriteBatch);
             if (inputMode)
-                spriteBatch.DrawString(font, name + currentKey.ToString(), new Vector2(game.GraphicsDevice.Viewport.Width / 2, game.GraphicsDevice.Viewport.Height / 2),Color.Red);
+            {
+#if ANDROID
+                spriteBatch.DrawString(font, name + currentKey.ToString(), new Vector2(game.GraphicsDevice.Viewport.Width / 2, game.GraphicsDevice.Viewport.Height / 2), Color.Red);
+#endif
+                spriteBatch.DrawString(font, name, new Vector2(game.GraphicsDevice.Viewport.Width / 2, game.GraphicsDevice.Viewport.Height / 2), Color.Red);
+
+            }
+                
               //  game.GraphicsDevice.Clear(Color.CornflowerBlue);
                 base.Draw(gameTime);
             

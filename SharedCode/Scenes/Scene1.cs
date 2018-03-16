@@ -24,8 +24,8 @@ public class Scene1 : Scene
         private SpriteFont font;
         private Vector2 fontPos = Vector2.Zero;
         private bool camMoving;
-        private NetworkConnection networkConnection;
-
+        private static NetworkConnection networkConnection;
+        static string playerName;
         double check;
 
 
@@ -48,8 +48,7 @@ public class Scene1 : Scene
 
             view = game.GraphicsDevice.Viewport;
 
-            networkConnection = new NetworkConnection("Sharks", "Maks", "192.168.2.111", 15000);
-            networkConnection.Start();
+            
 
             player = new Player(game);
             joystick = game.Content.Load<Texture2D>("joystick");
@@ -69,6 +68,13 @@ public class Scene1 : Scene
             camMoving = false;
 
             
+        }
+
+        public static void StartNetwork(string name)
+        {
+            playerName = name;
+            networkConnection = new NetworkConnection("Sharks", name, "192.168.2.111", 15000);
+            networkConnection.Start();
         }
 
         protected override void Dispose(bool disposing)
@@ -139,7 +145,7 @@ public class Scene1 : Scene
 
 
 
-
+            spriteBatch.DrawString(font, playerName, new Vector2(player.Position.X-20, player.Position.Y-50), Color.White);
             spriteBatch.DrawString(font, "Barrier: " + check, fontPos, Color.White);
             game.GraphicsDevice.Clear(Color.CornflowerBlue);
             base.Draw(gameTime);

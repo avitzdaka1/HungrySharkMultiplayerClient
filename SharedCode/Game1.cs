@@ -15,7 +15,7 @@ namespace AndroidVersion
         SpriteBatch spriteBatch;
         Scene1 scene1;
         Menu mainMenu;
-
+        
 
 
         public MyCrossPlatformGame()
@@ -125,5 +125,6 @@ namespace AndroidVersion
             base.Draw(gameTime);
             spriteBatch.End(); 
         }
+
     }
 }
