@@ -22,8 +22,12 @@ namespace AndroidVersion
         {
             graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
+            graphics.PreferredBackBufferWidth = 1920;
+            graphics.PreferredBackBufferHeight = 1080;
+      
+            
+           
 
-         
         }
 
         /// <summary>
@@ -37,8 +41,8 @@ namespace AndroidVersion
             // TODO: Add your initialization logic here
             IsMouseVisible = true;
             base.Initialize();
+          
 
-           
 
 
         }
@@ -82,10 +86,10 @@ namespace AndroidVersion
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed)
                 Exit();
 
-
+        
             if (mainMenu.isEnded())
             {
-
+               
                 mainMenu.Hide();
                 scene1.Show();
             }

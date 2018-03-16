@@ -34,6 +34,9 @@
     <WarningLevel>4</WarningLevel>
     <AndroidUseSharedRuntime>True</AndroidUseSharedRuntime>
     <AndroidLinkMode>None</AndroidLinkMode>
+    <AotAssemblies>false</AotAssemblies>
+    <EnableLLVM>false</EnableLLVM>
+    <BundleAssemblies>false</BundleAssemblies>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -50,6 +53,10 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\Comora.dll</HintPath>
     </Reference>
+    <Reference Include="Lidgren.Network, Version=3.6.0.1625, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\Lidgren.Network.dll</HintPath>
+    </Reference>
     <Reference Include="Mono.Android" />
     <Reference Include="mscorlib" />
     <Reference Include="OpenTK-1.0" />
@@ -65,14 +72,29 @@
     <Compile Include="..\SharedCode\Game1.cs">
       <Link>Game1.cs</Link>
     </Compile>
+    <Compile Include="..\SharedCode\Models\Enemy.cs">
+      <Link>models\Enemy.cs</Link>
+    </Compile>
     <Compile Include="..\SharedCode\Models\Player.cs">
       <Link>models\Player.cs</Link>
     </Compile>
     <Compile Include="..\SharedCode\Models\startButton.cs">
       <Link>models\startButton.cs</Link>
     </Compile>
+    <Compile Include="..\SharedCode\Networking\LoginInformation.cs">
+      <Link>Networking\LoginInformation.cs</Link>
+    </Compile>
+    <Compile Include="..\SharedCode\Networking\NetworkConnection.cs">
+      <Link>Networking\NetworkConnection.cs</Link>
+    </Compile>
+    <Compile Include="..\SharedCode\Networking\PacketType.cs">
+      <Link>Networking\PacketType.cs</Link>
+    </Compile>
     <Compile Include="..\SharedCode\Scenes\Menu.cs">
       <Link>scenes\Menu.cs</Link>
+    </Compile>
+    <Compile Include="..\SharedCode\Scenes\NameForm.cs">
+      <Link>scenes\NameForm.cs</Link>
     </Compile>
     <Compile Include="..\SharedCode\Scenes\Scene.cs">
       <Link>scenes\Scene.cs</Link>

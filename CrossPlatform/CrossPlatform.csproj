@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$(MSBuildExtensionsPath)\MonoGame\v3.0\MonoGame.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\MonoGame\v3.0\MonoGame.Common.props')" />
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -13,7 +13,8 @@
     <AssemblyName>CrossPlatform</AssemblyName>
     <FileAlignment>512</FileAlignment>
     <MonoGamePlatform>Windows</MonoGamePlatform>
-    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.6</TargetFrameworkVersion>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
     <PlatformTarget>x86</PlatformTarget>
@@ -44,14 +45,29 @@
     <Compile Include="..\SharedCode\Game1.cs">
       <Link>Game1.cs</Link>
     </Compile>
+    <Compile Include="..\SharedCode\Models\Enemy.cs">
+      <Link>models\Enemy.cs</Link>
+    </Compile>
     <Compile Include="..\SharedCode\Models\Player.cs">
       <Link>models\Player.cs</Link>
     </Compile>
     <Compile Include="..\SharedCode\Models\startButton.cs">
       <Link>models\startButton.cs</Link>
     </Compile>
+    <Compile Include="..\SharedCode\Networking\LoginInformation.cs">
+      <Link>Networking\LoginInformation.cs</Link>
+    </Compile>
+    <Compile Include="..\SharedCode\Networking\NetworkConnection.cs">
+      <Link>Networking\NetworkConnection.cs</Link>
+    </Compile>
+    <Compile Include="..\SharedCode\Networking\PacketType.cs">
+      <Link>Networking\PacketType.cs</Link>
+    </Compile>
     <Compile Include="..\SharedCode\Scenes\Menu.cs">
       <Link>scenes\Menu.cs</Link>
+    </Compile>
+    <Compile Include="..\SharedCode\Scenes\NameForm.cs">
+      <Link>scenes\NameForm.cs</Link>
     </Compile>
     <Compile Include="..\SharedCode\Scenes\Scene.cs">
       <Link>scenes\Scene.cs</Link>
@@ -67,6 +83,10 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\Comora.dll</HintPath>
     </Reference>
+    <Reference Include="Lidgren.Network, Version=3.6.0.1625, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\Lidgren.Network.dll</HintPath>
+    </Reference>
     <Reference Include="MonoGame.Framework">
       <HintPath>$(MonoGameInstallDirectory)\MonoGame\v3.0\Assemblies\Windows\MonoGame.Framework.dll</HintPath>
     </Reference>
@@ -80,6 +100,7 @@
     <MonoGameContentReference Include="..\AndroidVersion\Content\Content.mgcb">
       <Link>Content\Content.mgcb</Link>
     </MonoGameContentReference>
+    <None Include="app.config" />
     <None Include="app.manifest" />
   </ItemGroup>
   <ItemGroup>

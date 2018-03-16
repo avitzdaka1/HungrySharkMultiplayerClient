@@ -9,10 +9,13 @@ using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Input.Touch;
 
 
+
 namespace CrossPlatform
 {
     public class startButton : DrawableGameComponent
     {
+      
+        
         private Game game;
         SpriteBatch spriteBatch;
         private Texture2D texture;
@@ -35,9 +38,11 @@ namespace CrossPlatform
 
             size = new Vector2(game.GraphicsDevice.Viewport.Width / 4, game.GraphicsDevice.Viewport.Height / 8);
 
-
+           
 
         }
+
+        
 
         protected override void Dispose(bool disposing)
         {
@@ -102,12 +107,14 @@ namespace CrossPlatform
         }
 
 
-
+        
 
 
 #endif
         public void setPosition( Vector2 position)
         {
+
+              
             this.position = position;
         }
 

@@ -24,6 +24,7 @@ public class Scene1 : Scene
         private SpriteFont font;
         private Vector2 fontPos = Vector2.Zero;
         private bool camMoving;
+        private NetworkConnection networkConnection;
 
         double check;
 
@@ -47,6 +48,8 @@ public class Scene1 : Scene
 
             view = game.GraphicsDevice.Viewport;
 
+            networkConnection = new NetworkConnection("Sharks", "Maks", "192.168.2.111", 15000);
+            networkConnection.Start();
 
             player = new Player(game);
             joystick = game.Content.Load<Texture2D>("joystick");
@@ -71,6 +74,7 @@ public class Scene1 : Scene
         protected override void Dispose(bool disposing)
         {
             player.Dispose();
+            networkConnection.Stop();
             base.Dispose(disposing);
         }
         public override void Update(GameTime gameTime)
@@ -83,6 +87,7 @@ public class Scene1 : Scene
 
             if (check > 200 || camMoving)
             {
+                networkConnection.SendCoords(player.Position.X, player.Position.Y);
                 camMoving = true;
                 camera.Position = new Vector2(MathHelper.Lerp(camera.Position.X, player.Position.X, 0.05f), MathHelper.Lerp(camera.Position.Y, player.Position.Y, 0.05f));
                 if (check < 20)
