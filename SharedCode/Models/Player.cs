@@ -33,7 +33,7 @@ namespace AndroidVersion
             spriteBatch = (SpriteBatch)game.Services.GetService(typeof(SpriteBatch));
             joystickHeight = game.GraphicsDevice.Viewport.Height / 3;
             joystickWidth = game.GraphicsDevice.Viewport.Width / 4;
-            position = new Vector2(game.GraphicsDevice.Viewport.Width / 2 - playerTex.Width/2 , game.GraphicsDevice.Viewport.Height / 2 - playerTex.Height / 2);
+            position = new Vector2(game.GraphicsDevice.Viewport.Width / 2 , game.GraphicsDevice.Viewport.Height / 2);
             myDirection = Direction.Right;
         }
 
@@ -47,19 +47,19 @@ namespace AndroidVersion
         {
             double startX = position.X;
 #if WINDOWS
-            if(Keyboard.GetState().IsKeyDown(Keys.Up))
+            if(Keyboard.GetState().IsKeyDown(Keys.Up) && position.Y > 0 + playerTex.Height/2)
                 {
                     position.Y -= 3;
                 }
-            if (Keyboard.GetState().IsKeyDown(Keys.Down))
+            if (Keyboard.GetState().IsKeyDown(Keys.Down) && position.Y < Scene1.mapHeight -playerTex.Width/2)
             {
                 position.Y += 3;
             }
-            if (Keyboard.GetState().IsKeyDown(Keys.Right))
+            if (Keyboard.GetState().IsKeyDown(Keys.Right) && position.X < Scene1.mapWidth - playerTex.Width/2)
             {
                 position.X += 3;
             }
-            if (Keyboard.GetState().IsKeyDown(Keys.Left))
+            if (Keyboard.GetState().IsKeyDown(Keys.Left) && position.X > 0 + playerTex.Width/2)
             {
                 position.X -= 3;
             }
@@ -96,9 +96,9 @@ namespace AndroidVersion
         public override void Draw(GameTime gameTime)
         {
             if (myDirection == Direction.Right)
-                spriteBatch.Draw(playerTex, position, Color.Red);
+                spriteBatch.Draw(playerTex, new Vector2(position.X - playerTex.Width/2, position.Y - playerTex.Height/2), Color.Red);
             else
-                spriteBatch.Draw(playerTex, position, null, Color.Red, 0, Vector2.Zero, 1, SpriteEffects.FlipHorizontally, 0);
+                spriteBatch.Draw(playerTex, new Vector2(position.X - playerTex.Width / 2, position.Y - playerTex.Height / 2), null, Color.Red, 0, Vector2.Zero, 1, SpriteEffects.FlipHorizontally, 0);
             base.Draw(gameTime);
         }
 

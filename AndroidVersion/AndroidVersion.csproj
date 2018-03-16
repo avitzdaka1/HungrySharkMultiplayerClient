@@ -46,6 +46,9 @@
     <AndroidLinkMode>SdkOnly</AndroidLinkMode>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Comora">
+      <HintPath>..\..\..\..\Desktop\Comora-master\Sources\Comora\bin\Debug\Comora.dll</HintPath>
+    </Reference>
     <Reference Include="Mono.Android" />
     <Reference Include="mscorlib" />
     <Reference Include="OpenTK-1.0" />
@@ -56,11 +59,12 @@
     <Reference Include="MonoGame.Framework">
       <HintPath>$(MonoGameInstallDirectory)\MonoGame\v3.0\Assemblies\Android\MonoGame.Framework.dll</HintPath>
     </Reference>
+    <Reference Include="Transform">
+      <HintPath>..\..\..\..\Desktop\Transform-master\src\Transform\bin\Debug\Transform.dll</HintPath>
+      <Aliases>dest</Aliases>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="..\SharedCode\Camera\Camera.cs">
-      <Link>camera\Camera.cs</Link>
-    </Compile>
     <Compile Include="..\SharedCode\Game1.cs">
       <Link>Game1.cs</Link>
     </Compile>
@@ -94,6 +98,7 @@
     <AndroidResource Include="Resources\Drawable\Icon.png" />
   </ItemGroup>
   <ItemGroup>
+    <Folder Include="camera\" />
     <Folder Include="Resources\Layout\" />
   </ItemGroup>
   <ItemGroup>
