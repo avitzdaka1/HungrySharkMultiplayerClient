@@ -46,8 +46,9 @@
     <AndroidLinkMode>SdkOnly</AndroidLinkMode>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Comora">
-      <HintPath>..\..\..\..\Desktop\Comora-master\Sources\Comora\bin\Debug\Comora.dll</HintPath>
+    <Reference Include="Comora, Version=0.5.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\Comora.dll</HintPath>
     </Reference>
     <Reference Include="Mono.Android" />
     <Reference Include="mscorlib" />
@@ -58,10 +59,6 @@
     <Reference Include="System.Xml" />
     <Reference Include="MonoGame.Framework">
       <HintPath>$(MonoGameInstallDirectory)\MonoGame\v3.0\Assemblies\Android\MonoGame.Framework.dll</HintPath>
-    </Reference>
-    <Reference Include="Transform">
-      <HintPath>..\..\..\..\Desktop\Transform-master\src\Transform\bin\Debug\Transform.dll</HintPath>
-      <Aliases>dest</Aliases>
     </Reference>
   </ItemGroup>
   <ItemGroup>
