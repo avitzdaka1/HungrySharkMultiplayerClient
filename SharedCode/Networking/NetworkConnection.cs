@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using CrossPlatform.Fruits;
 using Lidgren.Network;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -21,10 +22,11 @@ namespace AndroidVersion
         private Enemy[] enemies;
         private Logger logger;
         private DataLog dataLogger;
+        private List<Apple> apples;
 
         public bool Active { get; set; }
 
-        public NetworkConnection(Game game, string appID, string name, string serverIP, int port, Enemy[] enemies)
+        public NetworkConnection(Game game, string appID, string name, string serverIP, int port, Enemy[] enemies, List<Apple> apples)
         {
             this.game = game;
             this.appID = appID;
@@ -33,6 +35,7 @@ namespace AndroidVersion
             this.enemies = enemies;
             logger = new Logger();
             dataLogger = new DataLog();
+            this.apples = apples;
 
             loginInformation = new NetworkLoginInformation()
             {
@@ -75,7 +78,7 @@ namespace AndroidVersion
             outMsg.Write(Player.id);
             outMsg.Write(X);
             outMsg.Write(Y);
-            netClient.SendMessage(outMsg, NetDeliveryMethod.ReliableOrdered,0);
+            netClient.SendMessage(outMsg, NetDeliveryMethod.Unreliable,0);
 
 
         }
@@ -110,7 +113,14 @@ namespace AndroidVersion
                         }
                             else
                         {
-                            enemies[tid].Position = new Vector2(MathHelper.Lerp(enemies[tid].Position.X, tempPos.X, 0.08f), MathHelper.Lerp(enemies[tid].Position.Y, tempPos.Y, 0.08f));
+                            if (enemies[tid].Position.X != tempPos.X)
+                            {
+                                if (enemies[tid].Position.X > tempPos.X)
+                                    enemies[tid].setDirection(1);
+                                else
+                                    enemies[tid].setDirection(0);
+                            }
+                            enemies[tid].Position = new Vector2(MathHelper.Lerp(enemies[tid].Position.X, tempPos.X, 0.8f), MathHelper.Lerp(enemies[tid].Position.Y, tempPos.Y, 0.8f));
                         }
                         break;
                     case PacketType.AllPlayers:
@@ -123,6 +133,12 @@ namespace AndroidVersion
                                 Player.id = temID;
                                 Player.name = Player.name + temID.ToString();
                                 getAllPlayers(msg);
+                        break;
+                    case PacketType.Fruit:
+                        var amount = msg.ReadInt32();
+                        var idx = msg.ReadInt32(); 
+                            apples.Insert(idx, new Apple(msg.ReadInt32(), msg.ReadInt32()));
+                        
                         break;
                             
 
@@ -165,6 +181,20 @@ namespace AndroidVersion
                 }
             }
 
+        }
+
+        public void Eat(Player player)
+        {
+            for(int i = 0; i < apples.Count; i ++)
+            {
+                if(Vector2.Distance(apples[i].getPosition(),player.Position) < 50)
+                {
+                    var outmsg = netClient.CreateMessage();
+                    outmsg.Write((byte)PacketType.Eat);
+                    outmsg.Write(i);
+                    netClient.SendMessage(outmsg, NetDeliveryMethod.ReliableOrdered);
+                }
+            }
         }
         
     }

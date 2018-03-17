@@ -69,6 +69,12 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="..\SharedCode\Fruits\Apple.cs">
+      <Link>Fruits\Apple.cs</Link>
+    </Compile>
+    <Compile Include="..\SharedCode\Fruits\BaseFruit.cs">
+      <Link>Fruits\BaseFruit.cs</Link>
+    </Compile>
     <Compile Include="..\SharedCode\Game1.cs">
       <Link>Game1.cs</Link>
     </Compile>

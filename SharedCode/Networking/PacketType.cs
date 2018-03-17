@@ -5,6 +5,8 @@ namespace AndroidVersion
         Login,
         Input,
         NewPlayer,
-        AllPlayers
+        AllPlayers,
+        Fruit,
+        Eat
     }
 }

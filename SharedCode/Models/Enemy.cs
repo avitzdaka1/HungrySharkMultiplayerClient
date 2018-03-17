@@ -87,6 +87,20 @@ namespace AndroidVersion
             this.name = name;
         }
 
+        public int getDirection()
+        {
+            if (myDirection == Direction.Right)
+                return 0;
+            else return 1;
+        }
+        public void setDirection(int direction)
+        {
+            if (direction == 0)
+                myDirection = Direction.Right;
+            else
+                myDirection = Direction.Left;
+        }
+
 
     }
 }

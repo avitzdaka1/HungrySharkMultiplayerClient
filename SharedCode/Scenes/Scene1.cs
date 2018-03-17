@@ -1,4 +1,5 @@
 using Comora;
+using CrossPlatform.Fruits;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
@@ -28,7 +29,8 @@ public class Scene1 : Scene
         private static NetworkConnection networkConnection;
         double check;
         Enemy[] enemies;
-       
+        List<Apple> apples;
+        Texture2D appleTex;
 
         Viewport view;
 
@@ -56,6 +58,7 @@ public class Scene1 : Scene
             map = game.Content.Load<Texture2D>("seaTexture");
             font = game.Content.Load<SpriteFont>("MyFont");
             
+            
             joystickPos = new Rectangle(-40, game.GraphicsDevice.Viewport.Height * 2 / 3 - 30, (int)(game.GraphicsDevice.Viewport.Width / 4.5 + 80), GraphicsDevice.Viewport.Height / 3 + 60);
             SceneComponents.Add(player);
             EndScene = false;
@@ -69,12 +72,14 @@ public class Scene1 : Scene
             camMoving = false;
             connected = false;
             enemies = new Enemy[20];
+            apples = new List<Apple>();
+            appleTex = game.Content.Load<Texture2D>("apple");
         }
 
         public void StartNetwork()
         {
            
-            networkConnection = new NetworkConnection(game, "Sharks", Player.name, "192.168.2.111", 15000, enemies);
+            networkConnection = new NetworkConnection(game, "Sharks", Player.name, "192.168.2.111", 15000, enemies, apples);
             networkConnection.Start();
             connected = true;
         }
@@ -88,6 +93,8 @@ public class Scene1 : Scene
         }
         public override void Update(GameTime gameTime)
         {
+           networkConnection.Eat(player);
+
 
             camera.Update(gameTime);
 
@@ -140,27 +147,39 @@ public class Scene1 : Scene
         public override void Draw(GameTime gameTime)
         {
 
-           
+
 
             spriteBatch.End();
             spriteBatch.Begin(this.camera);
-                    
+
             spriteBatch.Draw(map,
    new Rectangle(0, 0, mapWidth, mapHeight),
    null, Color.White, 0f, Vector2.Zero, SpriteEffects.None, 1);
 #if ANDROID
-            spriteBatch.Draw(joystick, joystickPos , Color.White);
+            spriteBatch.Draw(joystick, joystickPos, Color.White);
 #endif
 
+            foreach (Apple ap in apples)
+            {
+                spriteBatch.Draw(appleTex, new Vector2((float)ap.getX(), (float)ap.getY()), Color.White);
+            }
 
-          
-                foreach (Enemy en in enemies)
-                    if (en != null)
-                    {
-                        spriteBatch.Draw(en.PlayerTex, new Vector2(en.Position.X - en.PlayerTex.Width/2,en.Position.Y-en.PlayerTex.Height/2), Color.White);
+            foreach (Enemy en in enemies)
+                if (en != null)
+                {
+
+                    if (en.getDirection() == 0) { 
+                        spriteBatch.Draw(en.PlayerTex, new Vector2(en.Position.X - en.PlayerTex.Width / 2, en.Position.Y - en.PlayerTex.Height / 2), Color.White);
                         spriteBatch.DrawString(font, en.getName(), new Vector2(en.Position.X - 20, en.Position.Y - 50), Color.White);
                 }
+                else
+                    { 
+                    spriteBatch.Draw(en.PlayerTex, new Vector2(en.Position.X - en.PlayerTex.Width / 2, en.Position.Y - en.PlayerTex.Height / 2), null, Color.White, 0, Vector2.Zero, 1, SpriteEffects.FlipHorizontally, 0);
+                    spriteBatch.DrawString(font, en.getName(), new Vector2(en.Position.X - 20, en.Position.Y - 50), Color.White);
 
+        }
+        }
+            
             spriteBatch.DrawString(font, Player.name, new Vector2(player.Position.X-20, player.Position.Y-50), Color.White);
             spriteBatch.DrawString(font, "Barrier: " + check, fontPos, Color.White);
             game.GraphicsDevice.Clear(Color.CornflowerBlue);
