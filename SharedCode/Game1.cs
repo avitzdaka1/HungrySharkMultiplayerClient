@@ -22,8 +22,8 @@ namespace AndroidVersion
         {
             graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
-            graphics.PreferredBackBufferWidth = 1600;
-            graphics.PreferredBackBufferHeight = 1200;
+            graphics.PreferredBackBufferWidth = 600;
+            graphics.PreferredBackBufferHeight = 480;
       
             
            

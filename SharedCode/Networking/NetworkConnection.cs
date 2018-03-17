@@ -53,7 +53,7 @@ namespace AndroidVersion
         }
 
 
-        public bool Start()
+        public void Start()
         {
 
             outMsg = netClient.CreateMessage();
@@ -61,63 +61,26 @@ namespace AndroidVersion
             outMsg.WriteAllProperties(loginInformation);
             netClient.Connect(serverIP, port, outMsg);
 
+            System.Threading.Thread.Sleep(300);
 
-
-            return EstablishInfo();
-            //   return true;
+            Update();
+           
         }
 
 
-        public bool SendCoords(double X, double Y)
+        public void SendCoords(double X, double Y)
         {
             outMsg = netClient.CreateMessage();
             outMsg.Write((byte)PacketType.Input);
             outMsg.Write(Player.id);
             outMsg.Write(X);
             outMsg.Write(Y);
-            netClient.SendMessage(outMsg, NetDeliveryMethod.ReliableOrdered,1);
+            netClient.SendMessage(outMsg, NetDeliveryMethod.ReliableOrdered,0);
 
-            return true;
 
         }
 
-        private bool EstablishInfo()
-        {
-            var time = DateTime.Now;
-            NetIncomingMessage inc;
-            while (true)
-            {
-                if (DateTime.Now.Subtract(time).Seconds > 5)
-                {
-                    return false;
-                }
-                if ((inc = netClient.ReadMessage()) == null)
-                    continue;
-                switch (inc.MessageType)
-                {
-                    case NetIncomingMessageType.Data:
-                        var data = inc.ReadByte();
-                        if (data == (byte)PacketType.Login)
-                        {
-                            Active = inc.ReadBoolean();
-                            if (Active)
-                            {
-                                var tid = inc.ReadInt32();
-                                Player.id = tid;
-                                Player.name = Player.name + tid.ToString();
-                                getAllPlayers(inc);
-                                return true;
-                            }
-                            else
-                            {
-                                return false;
-                            }
-                        }
-                        break;
-                }
-
-            }
-        }
+      
 
 
 
@@ -147,13 +110,23 @@ namespace AndroidVersion
                         }
                             else
                         {
-                            enemies[tid].Position = tempPos;
+                            enemies[tid].Position = new Vector2(MathHelper.Lerp(enemies[tid].Position.X, tempPos.X, 0.08f), MathHelper.Lerp(enemies[tid].Position.Y, tempPos.Y, 0.08f));
                         }
                         break;
                     case PacketType.AllPlayers:
                         getAllPlayers(msg);
 
                         break;
+                    case PacketType.Login:
+                        
+                                var temID = msg.ReadInt32();
+                                Player.id = temID;
+                                Player.name = Player.name + temID.ToString();
+                                getAllPlayers(msg);
+                        break;
+                            
+
+                        
                 }
 
 
@@ -188,6 +161,7 @@ namespace AndroidVersion
                     temp.Position = tempPos;
                     enemies[tid] = temp;
                     logger.Log("Enemy id: " + enemies[tid].getId() + " Name: " + enemies[tid].getName() + " X: " + enemies[tid].Position.X + " Y: " + enemies[tid].Position.Y);
+                    
                 }
             }
 

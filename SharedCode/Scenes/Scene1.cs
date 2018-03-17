@@ -121,8 +121,8 @@ public class Scene1 : Scene
             joystickPos.Y = (int)camera.Position.Y + view.Height/2 - joystick.Height - 60;
 
 
-           if(check > 80) 
-                networkConnection.SendCoords(player.Position.X, player.Position.Y);
+            
+            networkConnection.SendCoords(player.Position.X, player.Position.Y);
             networkConnection.Update();
             
 
@@ -153,12 +153,13 @@ public class Scene1 : Scene
 #endif
 
 
-            if (networkConnection.Active)
+          
                 foreach (Enemy en in enemies)
                     if (en != null)
                     {
-                        spriteBatch.Draw(en.PlayerTex, en.Position, Color.White);
-                    }
+                        spriteBatch.Draw(en.PlayerTex, new Vector2(en.Position.X - en.PlayerTex.Width/2,en.Position.Y-en.PlayerTex.Height/2), Color.White);
+                        spriteBatch.DrawString(font, en.getName(), new Vector2(en.Position.X - 20, en.Position.Y - 50), Color.White);
+                }
 
             spriteBatch.DrawString(font, Player.name, new Vector2(player.Position.X-20, player.Position.Y-50), Color.White);
             spriteBatch.DrawString(font, "Barrier: " + check, fontPos, Color.White);
