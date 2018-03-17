@@ -91,7 +91,14 @@ namespace AndroidVersion
             {
                
                 mainMenu.Hide();
-                scene1.Show();
+
+                if (!scene1.isConnected())
+                {
+                   
+                    scene1.StartNetwork();
+                    scene1.Show();
+                }
+                
             }
 
 

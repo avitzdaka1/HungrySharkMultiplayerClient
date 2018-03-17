@@ -24,9 +24,12 @@ public class Scene1 : Scene
         private SpriteFont font;
         private Vector2 fontPos = Vector2.Zero;
         private bool camMoving;
-        private static NetworkConnection networkConnection;
-        static string playerName;
+        private bool connected;
+        private NetworkConnection networkConnection;
         double check;
+        Enemy[] enemies;
+        private Logger logger;
+        private DataLog dataLog;
 
 
         Viewport view;
@@ -66,21 +69,25 @@ public class Scene1 : Scene
             topBarrier = mapHeight - view.Height / 2;
             bottomBarrier = view.Height / 2;
             camMoving = false;
-
-            
+            connected = false;
+            enemies = new Enemy[20];
+            logger = new Logger();
+            dataLog = new DataLog();
         }
 
-        public static void StartNetwork(string name)
+        public void StartNetwork()
         {
-            playerName = name;
-            networkConnection = new NetworkConnection("Sharks", name, "192.168.2.111", 15000);
+           
+            networkConnection = new NetworkConnection(game, "Sharks", Player.name, "192.168.2.111", 15000);
             networkConnection.Start();
+            connected = true;
         }
 
         protected override void Dispose(bool disposing)
         {
             player.Dispose();
-            networkConnection.Stop();
+            if(isConnected())
+                networkConnection.Stop();
             base.Dispose(disposing);
         }
         public override void Update(GameTime gameTime)
@@ -93,7 +100,7 @@ public class Scene1 : Scene
 
             if (check > 200 || camMoving)
             {
-                networkConnection.SendCoords(player.Position.X, player.Position.Y);
+                
                 camMoving = true;
                 camera.Position = new Vector2(MathHelper.Lerp(camera.Position.X, player.Position.X, 0.05f), MathHelper.Lerp(camera.Position.Y, player.Position.Y, 0.05f));
                 if (check < 20)
@@ -119,11 +126,18 @@ public class Scene1 : Scene
 
 
 
+            networkConnection.SendCoords(player.Position.X, player.Position.Y);
 
-               
+           // networkConnection.Update(enemies);
+            
 
 
-             
+
+
+
+
+
+
             base.Update(gameTime);
         }
 
@@ -131,7 +145,7 @@ public class Scene1 : Scene
         public override void Draw(GameTime gameTime)
         {
 
-            
+           
 
             spriteBatch.End();
             spriteBatch.Begin(this.camera);
@@ -142,10 +156,16 @@ public class Scene1 : Scene
 #if ANDROID
             spriteBatch.Draw(joystick, joystickPos , Color.White);
 #endif
+            for (int i = 0; i < enemies.Length; i++)
+            {
+                if (enemies[i] != null)
+                {
+                    spriteBatch.Draw(enemies[i].PlayerTex, enemies[i].Position, Color.White);
+                }
+            }
 
-
-
-            spriteBatch.DrawString(font, playerName, new Vector2(player.Position.X-20, player.Position.Y-50), Color.White);
+            
+            spriteBatch.DrawString(font, Player.name, new Vector2(player.Position.X-20, player.Position.Y-50), Color.White);
             spriteBatch.DrawString(font, "Barrier: " + check, fontPos, Color.White);
             game.GraphicsDevice.Clear(Color.CornflowerBlue);
             base.Draw(gameTime);
@@ -156,6 +176,11 @@ public class Scene1 : Scene
         public bool isEnded()
         {
             return EndScene;
+        }
+
+        public bool isConnected()
+        {
+            return connected;
         }
 
     }

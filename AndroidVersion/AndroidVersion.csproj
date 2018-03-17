@@ -72,6 +72,15 @@
     <Compile Include="..\SharedCode\Game1.cs">
       <Link>Game1.cs</Link>
     </Compile>
+    <Compile Include="..\SharedCode\Logger\BaseLog.cs">
+      <Link>Logger\BaseLog.cs</Link>
+    </Compile>
+    <Compile Include="..\SharedCode\Logger\DataLog.cs">
+      <Link>Logger\DataLog.cs</Link>
+    </Compile>
+    <Compile Include="..\SharedCode\Logger\Logger.cs">
+      <Link>Logger\Logger.cs</Link>
+    </Compile>
     <Compile Include="..\SharedCode\Models\Enemy.cs">
       <Link>models\Enemy.cs</Link>
     </Compile>
