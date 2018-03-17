@@ -22,6 +22,8 @@ namespace AndroidVersion
         private float joystickWidth;
         enum Direction { Right, Left };
         private Direction myDirection;
+        private string name;
+        private int id;
 
         public Vector2 Position { get => position; set => position = value; }
         public Texture2D PlayerTex { get => playerTex; set => playerTex = value; }
@@ -31,9 +33,7 @@ namespace AndroidVersion
             this.game = game;
             playerTex = game.Content.Load<Texture2D>("shark");
             spriteBatch = (SpriteBatch)game.Services.GetService(typeof(SpriteBatch));
-            joystickHeight = game.GraphicsDevice.Viewport.Height / 3;
-            joystickWidth = game.GraphicsDevice.Viewport.Width / 4;
-            position = new Vector2(game.GraphicsDevice.Viewport.Width / 2, game.GraphicsDevice.Viewport.Height / 2);
+            position = new Vector2(-30, -30);
             myDirection = Direction.Right;
         }
 
@@ -66,6 +66,27 @@ namespace AndroidVersion
                 spriteBatch.Draw(playerTex, new Vector2(position.X - playerTex.Width / 2, position.Y - playerTex.Height / 2), null, Color.Red, 0, Vector2.Zero, 1, SpriteEffects.FlipHorizontally, 0);
             base.Draw(gameTime);
         }
+
+        public string getName()
+        {
+            return name;
+        }
+
+        public int getId()
+        {
+            return id;
+        }
+
+        public void setId(int id)
+        {
+            this.id = id;
+        }
+
+        public void setName(string name)
+        {
+            this.name = name;
+        }
+
 
     }
 }

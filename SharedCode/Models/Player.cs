@@ -22,6 +22,8 @@ namespace AndroidVersion
         private float joystickWidth;
         enum Direction { Right, Left };
         private Direction myDirection;
+        public static int id;
+        public static string name = "";
 
         public Vector2 Position { get => position; set => position = value; }
         public Texture2D PlayerTex { get => playerTex; set => playerTex = value; }

@@ -96,9 +96,8 @@ namespace AndroidVersion
                     if (gesture.GestureType == GestureType.Hold)
                     {
                         name.Append(currentKey.ToString());
-                     //   currentKey = null;
                         inputMode = false;
-                        Scene1.StartNetwork(name.ToString());
+                        AndroidVersion.Player.name = name.ToString();
                         EndScene = true;
                     }
 
@@ -122,7 +121,7 @@ namespace AndroidVersion
                         if (pressed_key[0] == Keys.Enter)
                         {
                             inputMode = false;
-                            Scene1.StartNetwork(name.ToString());
+                            AndroidVersion.Player.name = name.ToString();
                             EndScene = true;
                         }
                         else
