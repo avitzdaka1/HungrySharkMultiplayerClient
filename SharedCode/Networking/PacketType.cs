@@ -3,7 +3,8 @@ namespace AndroidVersion
     public enum PacketType
     {
         Login,
-        Data,
-        NewPlayer
+        Input,
+        NewPlayer,
+        AllPlayers
     }
 }

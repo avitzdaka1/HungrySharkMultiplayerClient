@@ -18,15 +18,17 @@ namespace AndroidVersion
         private int port;
         private NetOutgoingMessage outMsg;
         private Game game;
-       
-        
+        private Enemy[] enemies;
 
-        public NetworkConnection(Game game, string appID, string name, string serverIP, int port)
+        public bool Active { get; set; }
+
+        public NetworkConnection(Game game, string appID, string name, string serverIP, int port, Enemy[] enemies)
         {
             this.game = game;
             this.appID = appID;
             this.serverIP = serverIP;
             this.port = port;
+            this.enemies = enemies;
 
             loginInformation = new NetworkLoginInformation()
             {
@@ -37,7 +39,7 @@ namespace AndroidVersion
             netClient.Start();
         }
 
-        
+
         public bool Stop()
         {
             outMsg = netClient.CreateMessage();
@@ -45,46 +47,46 @@ namespace AndroidVersion
             netClient.Disconnect("Cya!!!");
             return true;
         }
-        
+
 
         public bool Start()
         {
-            
+
             outMsg = netClient.CreateMessage();
             outMsg.Write((byte)PacketType.Login);
             outMsg.WriteAllProperties(loginInformation);
-            netClient.Connect(serverIP,port, outMsg);
+            netClient.Connect(serverIP, port, outMsg);
 
 
 
-              return EstablishInfo();
-         //   return true;
+            return EstablishInfo();
+            //   return true;
         }
 
-        public void getNewEnemy(Enemy[] enemies, NetIncomingMessage msg)
+        public void getNewEnemy(NetIncomingMessage msg)
         {
-            
-           
-                string tempName = msg.ReadString();
-                int tempId = msg.ReadInt32();
-                Enemy temp = new Enemy(game);
-                temp.setName(tempName);
-                temp.setId(tempId);
+
+
+            string tempName = msg.ReadString();
+            int tempId = msg.ReadInt32();
+            Enemy temp = new Enemy(game);
+            temp.setName(tempName);
+            temp.setId(tempId);
 
             enemies[tempId] = temp;
-                
-            
+
+
         }
-        
+
 
         public bool SendCoords(double X, double Y)
         {
             outMsg = netClient.CreateMessage();
-            outMsg.Write((byte)PacketType.Data);
+            outMsg.Write((byte)PacketType.Input);
             outMsg.Write(Player.id);
             outMsg.Write(X);
             outMsg.Write(Y);
-            netClient.SendMessage(outMsg, NetDeliveryMethod.UnreliableSequenced,12);
+            netClient.SendMessage(outMsg, NetDeliveryMethod.ReliableOrdered,1);
 
             return true;
 
@@ -94,26 +96,27 @@ namespace AndroidVersion
         {
             var time = DateTime.Now;
             NetIncomingMessage inc;
-            while(true)
+            while (true)
             {
-                if(DateTime.Now.Subtract(time).Seconds > 5)
+                if (DateTime.Now.Subtract(time).Seconds > 5)
                 {
                     return false;
                 }
-                if((inc = netClient.ReadMessage()) == null)
+                if ((inc = netClient.ReadMessage()) == null)
                     continue;
-                switch(inc.MessageType)
+                switch (inc.MessageType)
                 {
                     case NetIncomingMessageType.Data:
                         var data = inc.ReadByte();
-                        if(data == (byte) PacketType.Login)
+                        if (data == (byte)PacketType.Login)
                         {
-                            var accepted = inc.ReadBoolean();
-                            if (accepted)
+                            Active = inc.ReadBoolean();
+                            if (Active)
                             {
                                 var tid = inc.ReadInt32();
                                 Player.id = tid;
                                 Player.name = Player.name + tid.ToString();
+                                getAllPlayers(inc);
                                 return true;
                             }
                             else
@@ -123,15 +126,76 @@ namespace AndroidVersion
                         }
                         break;
                 }
-                
+
             }
         }
 
 
 
-        public void Update(Enemy[] enemies)
+        public void Update()
         {
             NetIncomingMessage msg;
+            while ((msg = netClient.ReadMessage()) != null)
+            {
+                if (msg.MessageType != NetIncomingMessageType.Data)
+                    continue;
+                var packType = (PacketType)msg.ReadByte();
+                switch (packType)
+                {
+                    case PacketType.NewPlayer:
+                        Enemy temp = new Enemy(game);
+                        string tmpName = msg.ReadString();
+                        int tmpID = msg.ReadInt32();
+                        temp.setName(tmpName);
+                        temp.setId(tmpID);
+                        Vector2 s = new Vector2(40, 40);
+                        temp.Position = s;
+                        enemies[tmpID] = temp;
+                        break;
+                    case PacketType.AllPlayers:
+                        getAllPlayers(msg);
+
+                        break;
+                }
+
+
+            }
+
+           
+
+        }
+        public void getAllPlayers(NetIncomingMessage inc)
+        {
+            var count = inc.ReadInt32();
+            for(int i = 0; i < count ; i ++)
+            {
+                var tid = inc.ReadUInt32();
+                var tName = inc.ReadString();
+                var tX = inc.ReadDouble();
+                var tY = inc.ReadDouble();
+                Vector2 tempPos = new Vector2((float)tX, (float)tY);
+
+                if (tid == Player.id)
+                    continue;
+                if (enemies[tid] != null)
+                {
+                    enemies[tid].Position = tempPos;
+                }
+                else
+                {
+                    Enemy temp = new Enemy(game);
+                    temp.setName(tName);
+                    temp.setId((int)tid);
+                    temp.Position = tempPos;
+                    enemies[tid] = temp;
+                }
+            }
+        }
+    }
+        
+
+            /*
+             NetIncomingMessage msg;
             if((msg = netClient.ReadMessage()) == null)
                 return;
             byte header = msg.ReadByte();
@@ -144,12 +208,18 @@ namespace AndroidVersion
                 double x = msg.ReadDouble();
                 double y = msg.ReadDouble();
                 Vector2 pos = new Vector2((float)x, (float)y);
+                if(enemies[id] == null)
+                {
+                    enemies[id] = new Enemy(game);
+                    enemies[id].Position = pos;
+                }
                 enemies[id].Position = pos; 
             }
-        }
+             */
+        
 
 
 
 
-    }
+   
 }

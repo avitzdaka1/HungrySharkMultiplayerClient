@@ -28,7 +28,7 @@ public class Scene1 : Scene
         private static NetworkConnection networkConnection;
         double check;
         Enemy[] enemies;
-
+       
 
         Viewport view;
 
@@ -74,7 +74,7 @@ public class Scene1 : Scene
         public void StartNetwork()
         {
            
-            networkConnection = new NetworkConnection(game, "Sharks", Player.name, "192.168.2.111", 15000);
+            networkConnection = new NetworkConnection(game, "Sharks", Player.name, "192.168.2.111", 15000, enemies);
             networkConnection.Start();
             connected = true;
         }
@@ -121,10 +121,9 @@ public class Scene1 : Scene
             joystickPos.Y = (int)camera.Position.Y + view.Height/2 - joystick.Height - 60;
 
 
-
-            networkConnection.SendCoords(player.Position.X, player.Position.Y);
-
-            networkConnection.Update(enemies);
+           if(check > 50) 
+                networkConnection.SendCoords(player.Position.X, player.Position.Y);
+            networkConnection.Update();
             
 
 
