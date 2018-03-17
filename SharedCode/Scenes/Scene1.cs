@@ -121,7 +121,7 @@ public class Scene1 : Scene
             joystickPos.Y = (int)camera.Position.Y + view.Height/2 - joystick.Height - 60;
 
 
-           if(check > 50) 
+           if(check > 80) 
                 networkConnection.SendCoords(player.Position.X, player.Position.Y);
             networkConnection.Update();
             
@@ -151,21 +151,23 @@ public class Scene1 : Scene
 #if ANDROID
             spriteBatch.Draw(joystick, joystickPos , Color.White);
 #endif
-            for (int i = 0; i < enemies.Length; i++)
-            {
-                if (enemies[i] != null)
-                {
-                    spriteBatch.Draw(enemies[i].PlayerTex, enemies[i].Position, Color.White);
-                }
-            }
 
-            
+
+            if (networkConnection.Active)
+                foreach (Enemy en in enemies)
+                    if (en != null)
+                    {
+                        spriteBatch.Draw(en.PlayerTex, en.Position, Color.White);
+                    }
+
             spriteBatch.DrawString(font, Player.name, new Vector2(player.Position.X-20, player.Position.Y-50), Color.White);
             spriteBatch.DrawString(font, "Barrier: " + check, fontPos, Color.White);
             game.GraphicsDevice.Clear(Color.CornflowerBlue);
             base.Draw(gameTime);
             spriteBatch.End();
             spriteBatch.Begin();
+
+            
         }
 
         public bool isEnded()

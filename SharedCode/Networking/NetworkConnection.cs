@@ -19,6 +19,8 @@ namespace AndroidVersion
         private NetOutgoingMessage outMsg;
         private Game game;
         private Enemy[] enemies;
+        private Logger logger;
+        private DataLog dataLogger;
 
         public bool Active { get; set; }
 
@@ -29,6 +31,8 @@ namespace AndroidVersion
             this.serverIP = serverIP;
             this.port = port;
             this.enemies = enemies;
+            logger = new Logger();
+            dataLogger = new DataLog();
 
             loginInformation = new NetworkLoginInformation()
             {
@@ -61,21 +65,6 @@ namespace AndroidVersion
 
             return EstablishInfo();
             //   return true;
-        }
-
-        public void getNewEnemy(NetIncomingMessage msg)
-        {
-
-
-            string tempName = msg.ReadString();
-            int tempId = msg.ReadInt32();
-            Enemy temp = new Enemy(game);
-            temp.setName(tempName);
-            temp.setId(tempId);
-
-            enemies[tempId] = temp;
-
-
         }
 
 
@@ -143,14 +132,23 @@ namespace AndroidVersion
                 switch (packType)
                 {
                     case PacketType.NewPlayer:
-                        Enemy temp = new Enemy(game);
+                        int tid = msg.ReadInt32();
                         string tmpName = msg.ReadString();
-                        int tmpID = msg.ReadInt32();
-                        temp.setName(tmpName);
-                        temp.setId(tmpID);
-                        Vector2 s = new Vector2(40, 40);
-                        temp.Position = s;
-                        enemies[tmpID] = temp;
+                        double x = msg.ReadDouble();
+                        double y = msg.ReadDouble();
+                        Vector2 tempPos = new Vector2((float)x, (float)y);
+                        if (enemies[tid] == null)
+                        {
+                            Enemy temp = new Enemy(game);
+                            temp.setId(tid);
+                            temp.setName(tmpName);
+                            temp.Position = tempPos;
+                            enemies[tid] = temp;
+                        }
+                            else
+                        {
+                            enemies[tid].Position = tempPos;
+                        }
                         break;
                     case PacketType.AllPlayers:
                         getAllPlayers(msg);
@@ -164,6 +162,7 @@ namespace AndroidVersion
            
 
         }
+        
         public void getAllPlayers(NetIncomingMessage inc)
         {
             var count = inc.ReadInt32();
@@ -188,34 +187,15 @@ namespace AndroidVersion
                     temp.setId((int)tid);
                     temp.Position = tempPos;
                     enemies[tid] = temp;
+                    logger.Log("Enemy id: " + enemies[tid].getId() + " Name: " + enemies[tid].getName() + " X: " + enemies[tid].Position.X + " Y: " + enemies[tid].Position.Y);
                 }
             }
+
         }
+        
     }
         
-
-            /*
-             NetIncomingMessage msg;
-            if((msg = netClient.ReadMessage()) == null)
-                return;
-            byte header = msg.ReadByte();
-            if (header == (byte)PacketType.NewPlayer)
-                getNewEnemy(enemies,msg);
-            else
-            if(header == (byte)PacketType.Data && msg.SequenceChannel == 9)
-            {
-                int id = msg.ReadInt32();
-                double x = msg.ReadDouble();
-                double y = msg.ReadDouble();
-                Vector2 pos = new Vector2((float)x, (float)y);
-                if(enemies[id] == null)
-                {
-                    enemies[id] = new Enemy(game);
-                    enemies[id].Position = pos;
-                }
-                enemies[id].Position = pos; 
-            }
-             */
+   
         
 
 
