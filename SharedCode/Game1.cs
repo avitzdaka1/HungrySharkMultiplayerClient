@@ -96,9 +96,8 @@ namespace AndroidVersion
                 {
                    
                     scene1.StartNetwork();
-                    scene1.Show();
                 }
-                
+                scene1.Show();
             }
 
 

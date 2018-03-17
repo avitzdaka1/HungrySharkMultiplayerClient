@@ -7,7 +7,6 @@ using Lidgren.Network;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
-
 namespace AndroidVersion
 {
     class NetworkConnection
@@ -19,8 +18,6 @@ namespace AndroidVersion
         private int port;
         private NetOutgoingMessage outMsg;
         private Game game;
-        private Logger logger;
-        private DataLog dataLogger;
        
         
 
@@ -30,8 +27,6 @@ namespace AndroidVersion
             this.appID = appID;
             this.serverIP = serverIP;
             this.port = port;
-            logger = new Logger();
-            dataLogger = new DataLog();
 
             loginInformation = new NetworkLoginInformation()
             {
@@ -50,92 +45,21 @@ namespace AndroidVersion
             netClient.Disconnect("Cya!!!");
             return true;
         }
-
+        
 
         public bool Start()
         {
-
+            
             outMsg = netClient.CreateMessage();
             outMsg.Write((byte)PacketType.Login);
             outMsg.WriteAllProperties(loginInformation);
-            netClient.Connect(serverIP, port, outMsg);
+            netClient.Connect(serverIP,port, outMsg);
 
-            while (true)
-            {
-                NetIncomingMessage inc;
-                if ((inc = netClient.ReadMessage()) == null)
-                    continue;
-                switch (inc.MessageType)
-                {
-                    case NetIncomingMessageType.Error:
-                        break;
-                    case NetIncomingMessageType.StatusChanged:
-                        break;
-                    case NetIncomingMessageType.UnconnectedData:
-                        break;
-                    case NetIncomingMessageType.ConnectionApproval:
-                        break;
-                    case NetIncomingMessageType.Data:
-                        if (EstablishInfo(inc))
-                            break;
-                        else
-                            continue;
-                    case NetIncomingMessageType.Receipt:
-                        break;
-                    case NetIncomingMessageType.DiscoveryRequest:
-                        break;
-                    case NetIncomingMessageType.DiscoveryResponse:
-                        break;
-                    case NetIncomingMessageType.VerboseDebugMessage:
-                        break;
-                    case NetIncomingMessageType.DebugMessage:
-                        logger.Log(inc.ReadString());
 
-                        break;
-                    case NetIncomingMessageType.WarningMessage:
-                        break;
-                    case NetIncomingMessageType.ErrorMessage:
-                        break;
-                    case NetIncomingMessageType.NatIntroductionSuccess:
-                        break;
-                    case NetIncomingMessageType.ConnectionLatencyUpdated:
-                        break;
-                    default:
-                        break;
-                }
 
-            }
+              return EstablishInfo();
+         //   return true;
         }
-            private bool EstablishInfo(NetIncomingMessage inc)
-            {
-                var time = DateTime.Now;
-                var data = inc.ReadByte();
-                if (data == (byte)PacketType.Login)
-                {
-                    var accepted = inc.ReadBoolean();
-                    if (accepted)
-                    {
-                        var tid = inc.ReadInt32();
-                        Player.id = tid;
-                        Player.name = Player.name + tid.ToString();
-                        return true;
-                    }
-                    else
-                    {
-                        return false;
-                    }
-                }
-
-                return false;
-
-
-            }
-
-
-
-
-
-        
 
         public void getNewEnemy(Enemy[] enemies, NetIncomingMessage msg)
         {
@@ -166,7 +90,42 @@ namespace AndroidVersion
 
         }
 
-        
+        private bool EstablishInfo()
+        {
+            var time = DateTime.Now;
+            NetIncomingMessage inc;
+            while(true)
+            {
+                if(DateTime.Now.Subtract(time).Seconds > 5)
+                {
+                    return false;
+                }
+                if((inc = netClient.ReadMessage()) == null)
+                    continue;
+                switch(inc.MessageType)
+                {
+                    case NetIncomingMessageType.Data:
+                        var data = inc.ReadByte();
+                        if(data == (byte) PacketType.Login)
+                        {
+                            var accepted = inc.ReadBoolean();
+                            if (accepted)
+                            {
+                                var tid = inc.ReadInt32();
+                                Player.id = tid;
+                                Player.name = Player.name + tid.ToString();
+                                return true;
+                            }
+                            else
+                            {
+                                return false;
+                            }
+                        }
+                        break;
+                }
+                
+            }
+        }
 
 
 

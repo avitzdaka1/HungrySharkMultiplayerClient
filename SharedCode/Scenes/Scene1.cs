@@ -25,11 +25,9 @@ public class Scene1 : Scene
         private Vector2 fontPos = Vector2.Zero;
         private bool camMoving;
         private bool connected;
-        private NetworkConnection networkConnection;
+        private static NetworkConnection networkConnection;
         double check;
         Enemy[] enemies;
-        private Logger logger;
-        private DataLog dataLog;
 
 
         Viewport view;
@@ -71,8 +69,6 @@ public class Scene1 : Scene
             camMoving = false;
             connected = false;
             enemies = new Enemy[20];
-            logger = new Logger();
-            dataLog = new DataLog();
         }
 
         public void StartNetwork()
@@ -128,7 +124,7 @@ public class Scene1 : Scene
 
             networkConnection.SendCoords(player.Position.X, player.Position.Y);
 
-           // networkConnection.Update(enemies);
+            networkConnection.Update(enemies);
             
 
 
