@@ -21,8 +21,8 @@ namespace AndroidVersion
         private NetOutgoingMessage outMsg;
         private Game game;
         private Enemy[] enemies;
-        private Logger logger;
-        private DataLog dataLogger;
+       // private Logger logger;
+        //private DataLog dataLogger;
         private HashSet<Apple> apples;
        
         
@@ -36,8 +36,8 @@ namespace AndroidVersion
             this.serverIP = serverIP;
             this.port = port;
             this.enemies = enemies;
-            logger = new Logger();
-            dataLogger = new DataLog();
+          //  logger = new Logger();
+           // dataLogger = new DataLog();
             this.apples = apples;
             
 
@@ -184,7 +184,7 @@ namespace AndroidVersion
                     temp.setId((int)tid);
                     temp.Position = tempPos;
                     enemies[tid] = temp;
-                    logger.Log("Enemy id: " + enemies[tid].getId() + " Name: " + enemies[tid].getName() + " X: " + enemies[tid].Position.X + " Y: " + enemies[tid].Position.Y);
+                 //   logger.Log("Enemy id: " + enemies[tid].getId() + " Name: " + enemies[tid].getName() + " X: " + enemies[tid].Position.X + " Y: " + enemies[tid].Position.Y);
                     
                 }
             }
@@ -213,7 +213,7 @@ namespace AndroidVersion
             }
             if(apl != null)
                 apples.Remove(apl);
-            logger.Log(enemies.Length.ToString());
+        //    logger.Log(enemies.Length.ToString());
 
 
         }
