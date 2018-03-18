@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using CrossPlatform.Fruits;
 using Lidgren.Network;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Graphics;
 
 namespace AndroidVersion
@@ -22,11 +23,13 @@ namespace AndroidVersion
         private Enemy[] enemies;
         private Logger logger;
         private DataLog dataLogger;
-        private List<Apple> apples;
+        private HashSet<Apple> apples;
+       
+        
 
         public bool Active { get; set; }
 
-        public NetworkConnection(Game game, string appID, string name, string serverIP, int port, Enemy[] enemies, List<Apple> apples)
+        public NetworkConnection(Game game, string appID, string name, string serverIP, int port, Enemy[] enemies, HashSet<Apple> apples)
         {
             this.game = game;
             this.appID = appID;
@@ -36,6 +39,7 @@ namespace AndroidVersion
             logger = new Logger();
             dataLogger = new DataLog();
             this.apples = apples;
+            
 
             loginInformation = new NetworkLoginInformation()
             {
@@ -136,9 +140,13 @@ namespace AndroidVersion
                         break;
                     case PacketType.Fruit:
                         var amount = msg.ReadInt32();
-                        var idx = msg.ReadInt32(); 
-                            apples.Insert(idx, new Apple(msg.ReadInt32(), msg.ReadInt32()));
-                        
+                        for (int i = 0; i < amount; i++)
+                        {
+                            int xx = msg.ReadInt32();
+                            int yy = msg.ReadInt32();
+                            apples.Add(new Apple(xx, yy));
+                        }
+
                         break;
                             
 
@@ -183,20 +191,32 @@ namespace AndroidVersion
 
         }
 
-        public void Eat(Player player)
+        public void Eat(Player player, List<SoundEffect> snd, Random rnd)
         {
-            for(int i = 0; i < apples.Count; i ++)
+            Apple apl = null;
+            foreach(Apple ap in apples)
             {
-                if(Vector2.Distance(apples[i].getPosition(),player.Position) < 50)
+                if(Vector2.Distance(ap.getPosition(),player.Position) < 50)
                 {
+                    snd[rnd.Next(1, 5)].Play();
                     var outmsg = netClient.CreateMessage();
                     outmsg.Write((byte)PacketType.Eat);
-                    outmsg.Write(i);
+                    outmsg.Write(ap.getX());
+                    outmsg.Write(ap.getY());
+                    apl = ap;
                     netClient.SendMessage(outmsg, NetDeliveryMethod.ReliableOrdered);
+               
+                   
                 }
+                
             }
+            if(apl != null)
+                apples.Remove(apl);
+            logger.Log(enemies.Length.ToString());
+
+
         }
-        
+       
     }
         
    

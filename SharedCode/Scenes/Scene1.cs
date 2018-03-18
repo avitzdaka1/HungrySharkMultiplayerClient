@@ -1,8 +1,10 @@
 using Comora;
 using CrossPlatform.Fruits;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using Microsoft.Xna.Framework.Media;
 using System;
 using System.Collections.Generic;
 
@@ -29,9 +31,11 @@ public class Scene1 : Scene
         private static NetworkConnection networkConnection;
         double check;
         Enemy[] enemies;
-        List<Apple> apples;
+        HashSet<Apple> apples;
         Texture2D appleTex;
-
+        private Song backgroundMusic;
+        private Random rnd;
+        List<SoundEffect> snd;
         Viewport view;
 
 
@@ -46,10 +50,12 @@ public class Scene1 : Scene
         public Scene1(Game game) : base(game)
         {
             this.game = game;
-            
+            rnd = new Random((int)DateTime.Now.Ticks);
+
             spriteBatch = (SpriteBatch)game.Services.GetService(typeof(SpriteBatch));
 
             view = game.GraphicsDevice.Viewport;
+          
 
             
 
@@ -57,8 +63,11 @@ public class Scene1 : Scene
             joystick = game.Content.Load<Texture2D>("joystick");
             map = game.Content.Load<Texture2D>("seaTexture");
             font = game.Content.Load<SpriteFont>("MyFont");
-            
-            
+
+            int songNumber = rnd.Next(1, 5);
+            backgroundMusic = game.Content.Load<Song>("background" + songNumber);
+
+
             joystickPos = new Rectangle(-40, game.GraphicsDevice.Viewport.Height * 2 / 3 - 30, (int)(game.GraphicsDevice.Viewport.Width / 4.5 + 80), GraphicsDevice.Viewport.Height / 3 + 60);
             SceneComponents.Add(player);
             EndScene = false;
@@ -72,13 +81,22 @@ public class Scene1 : Scene
             camMoving = false;
             connected = false;
             enemies = new Enemy[20];
-            apples = new List<Apple>();
+            apples = new HashSet<Apple>();
+            snd = new List<SoundEffect>();
+
+            for(int i = 1; i < 5; i ++)
+            {
+                SoundEffect tmp = game.Content.Load<SoundEffect>("eat2");
+                snd.Add(tmp);
+            }
+
             appleTex = game.Content.Load<Texture2D>("apple");
         }
 
         public void StartNetwork()
         {
-           
+            
+            MediaPlayer.Play(backgroundMusic);
             networkConnection = new NetworkConnection(game, "Sharks", Player.name, "192.168.2.111", 15000, enemies, apples);
             networkConnection.Start();
             connected = true;
@@ -93,7 +111,7 @@ public class Scene1 : Scene
         }
         public override void Update(GameTime gameTime)
         {
-           networkConnection.Eat(player);
+           networkConnection.Eat(player,snd, rnd);
 
 
             camera.Update(gameTime);

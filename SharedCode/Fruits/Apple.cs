@@ -9,7 +9,7 @@ namespace CrossPlatform.Fruits
 {
     
 
-    public class Apple: BaseFruit
+    public class Apple: BaseFruit, IEquatable<Apple>
     {
         private double x;
         private double y;
@@ -22,6 +22,25 @@ namespace CrossPlatform.Fruits
             
         }
 
+        public bool Equals(Apple other)
+        {
+            if (other.x == x && other.y == y)
+                return true;
+
+            return false;
+        }
+
+        public override int GetHashCode()
+        {
+            //if (Object.ReferenceEquals(this, null)) return 0;
+
+            //Get hash code for the Numf field if it is not null. 
+            int hashNumf = x == 0 ? 0 : x.GetHashCode();
+            hashNumf += y == 0 ? 0 : y.GetHashCode();
+            return hashNumf;
+        }
+
+        
 
 
 

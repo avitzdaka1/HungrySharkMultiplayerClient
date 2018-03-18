@@ -3,6 +3,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using System;
+using System.Collections.Generic;
 
 namespace AndroidVersion
 {
@@ -15,8 +16,8 @@ namespace AndroidVersion
         SpriteBatch spriteBatch;
         Scene1 scene1;
         Menu mainMenu;
-        
 
+        
 
         public MyCrossPlatformGame()
         {
@@ -24,7 +25,7 @@ namespace AndroidVersion
             Content.RootDirectory = "Content";
             graphics.PreferredBackBufferWidth = 1920;
             graphics.PreferredBackBufferHeight = 1080;
-      
+ 
             
            
 
@@ -60,6 +61,10 @@ namespace AndroidVersion
             scene1 = new Scene1(this);
             mainMenu = new Menu(this);
             
+
+            
+
+
             Components.Add(scene1);
             Components.Add(mainMenu);
 
