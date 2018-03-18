@@ -8,6 +8,7 @@ namespace AndroidVersion
         AllPlayers,
         Fruit,
         Eat,
-        NewApple
+        AndroidLogin
+       
     }
 }

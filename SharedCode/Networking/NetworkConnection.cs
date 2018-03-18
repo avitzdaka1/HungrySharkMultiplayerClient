@@ -131,6 +131,13 @@ namespace AndroidVersion
                         getAllPlayers(msg);
 
                         break;
+                    case PacketType.AndroidLogin:
+                        var tempID = msg.ReadInt32();
+                        Player.id = tempID;
+                        Player.name = Player.name + tempID.ToString();
+                        getAllPlayers(msg);
+                        break;
+
                     case PacketType.Login:
                         
                                 var temID = msg.ReadInt32();
@@ -138,6 +145,7 @@ namespace AndroidVersion
                                 Player.name = Player.name + temID.ToString();
                                 getAllPlayers(msg);
                         break;
+
                     case PacketType.Fruit:
                         var amount = msg.ReadInt32();
                         for (int i = 0; i < amount; i++)
