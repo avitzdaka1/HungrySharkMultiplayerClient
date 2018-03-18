@@ -198,7 +198,8 @@ namespace AndroidVersion
             {
                 if(Vector2.Distance(ap.getPosition(),player.Position) < 50)
                 {
-                    snd[rnd.Next(1, 5)].Play();
+                    int num = rnd.Next(0, 4);
+                    snd[num].Play();
                     var outmsg = netClient.CreateMessage();
                     outmsg.Write((byte)PacketType.Eat);
                     outmsg.Write(ap.getX());

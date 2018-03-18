@@ -38,7 +38,7 @@ public class Scene1 : Scene
         List<SoundEffect> snd;
         Viewport view;
 
-
+       
 
         float leftBarrier, rightBarrier, bottomBarrier, topBarrier;
 
@@ -86,7 +86,8 @@ public class Scene1 : Scene
 
             for(int i = 1; i < 5; i ++)
             {
-                SoundEffect tmp = game.Content.Load<SoundEffect>("eat2");
+                SoundEffect tmp = game.Content.Load<SoundEffect>("eat" + i);
+                tmp.Play(1.0f, 0.0f, 0.0f);
                 snd.Add(tmp);
             }
 
@@ -95,7 +96,7 @@ public class Scene1 : Scene
 
         public void StartNetwork()
         {
-            
+            MediaPlayer.Volume = 0.4f;
             MediaPlayer.Play(backgroundMusic);
             networkConnection = new NetworkConnection(game, "Sharks", Player.name, "192.168.2.111", 15000, enemies, apples);
             networkConnection.Start();
