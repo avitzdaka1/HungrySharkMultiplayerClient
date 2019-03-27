@@ -14,6 +14,8 @@ namespace AndroidVersion
 {
 public class Scene1 : Scene
     {
+        private readonly string serverIp = "127.0.0.1";
+        private readonly int port = 15000;
         private Camera camera;
         private SpriteBatch spriteBatch;
         private Game game;
@@ -98,7 +100,7 @@ public class Scene1 : Scene
         {
             MediaPlayer.Volume = 0.4f;
             MediaPlayer.Play(backgroundMusic);
-            networkConnection = new NetworkConnection(game, "Sharks", Player.name, "milky.ddns.net", 15000, enemies, apples);
+            networkConnection = new NetworkConnection(game, "Sharks", Player.name, serverIp, port, enemies, apples);
             networkConnection.Start();
             connected = true;
         }
