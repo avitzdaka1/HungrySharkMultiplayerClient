@@ -20,9 +20,9 @@ Requirements:
 
 
 
-To install:
+Installation:
 * Server: 
-The server project located in another repository https://github.com/maksimlya/CrossPlatformGame.Server 
+The server project located in another repository https://github.com/maksimlya/HungrySharkMultiplayerServer 
 Can run on any .Net capable machine ( Tested on visual studio 17 under windows and MonoDevelop/ Rider IDE under Linux).
 The Server listens by default on port 15000, so make sure that port is open in your firewall (or change it).
 
